@@ -3,7 +3,6 @@
 const trafficWeights = require('../config/trafficWeights');
 const dijkstra = (graph, startNode, endNode) => {
 
-
   let distances = {};
   let previousNodes = {};
   let nodes = new Set();

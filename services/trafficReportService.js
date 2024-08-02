@@ -2,13 +2,13 @@ const Road = require('../models/road');
 const TrafficUpdate = require('../models/trafficUpdate');
 const { Parser } = require('json2csv');
 
-exports.getRoadTrafficCondition = async (roadId) => {
+exports.getRoadTrafficConditionService = async (roadId) => {
   const road = await Road.findById(roadId);
   const trafficUpdates = await TrafficUpdate.find({ road_id: roadId });
   return { road, trafficUpdates };
 };
 
-exports.generateTrafficReport = async () => {
+exports.generateTrafficReportService = async () => {
   const roads = await Road.find();
   const trafficUpdates = await TrafficUpdate.find();
   const data = roads.map(road => {
@@ -29,7 +29,7 @@ exports.generateTrafficReport = async () => {
   return json2csvParser.parse(data);
 };
 
-exports.analyzeTrafficUpdates = async (period) => {
+exports.analyzeTrafficUpdatesService = async (period) => {
   const endDate = new Date();
   let startDate;
 
