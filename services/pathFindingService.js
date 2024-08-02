@@ -12,7 +12,7 @@ exports.getShortestPath = async (start_location_id, end_location_id) => {
     const startId = road.start_location_id.toString();
     const endId = road.end_location_id.toString();
     const weight = road.distance * trafficWeights[road.traffic_condition];
-
+    
     if (!acc[startId]) acc[startId] = [];
     if (!acc[endId]) acc[endId] = [];
 

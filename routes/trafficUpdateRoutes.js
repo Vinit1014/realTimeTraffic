@@ -6,6 +6,5 @@ router.post('/', updateTrafficCondition);
 
 module.exports = router;
 
-//////////////////////////////////////
 
 
