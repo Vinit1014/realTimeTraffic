@@ -1,10 +1,8 @@
 
-// services/pathfindingService.js
-const trafficWeights = require('../config/trafficWeights');
 
+const trafficWeights = require('../config/trafficWeights');
 const dijkstra = (graph, startNode, endNode) => {
-  // Implementation of Dijkstra's algorithm
-  // This is a placeholder; replace with your actual implementation
+
 
   let distances = {};
   let previousNodes = {};
@@ -46,7 +44,7 @@ const dijkstra = (graph, startNode, endNode) => {
   return {
     path,
     totalDistance: distances[endNode],
-    estimatedTime: distances[endNode] / 60 // Example conversion
+    estimatedTime: distances[endNode] / 60 
   };
 };
 

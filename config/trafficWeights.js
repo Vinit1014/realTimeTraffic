@@ -5,4 +5,3 @@ const trafficWeights = {
   };
   
 module.exports = trafficWeights;
-  
