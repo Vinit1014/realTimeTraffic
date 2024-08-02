@@ -1,31 +1,53 @@
-const Road = require('../models/road');
-const TrafficUpdate = require('../models/trafficUpdate');
-const { calculateShortestPath } = require('../utils/graph');
 
-exports.getShortestPath = async (start_location_id, end_location_id) => {
-  const roads = await Road.find();
-  const trafficUpdates = await TrafficUpdate.find();
+// services/pathfindingService.js
+const trafficWeights = require('../config/trafficWeights');
 
-  const trafficWeights = { clear: 1, moderate: 5, heavy: 10 };
+const dijkstra = (graph, startNode, endNode) => {
+  // Implementation of Dijkstra's algorithm
+  // This is a placeholder; replace with your actual implementation
 
-  const graph = roads.reduce((acc, road) => {
-    const startId = road.start_location_id.toString();
-    const endId = road.end_location_id.toString();
-    const weight = road.distance * trafficWeights[road.traffic_condition];
-    
-    if (!acc[startId]) acc[startId] = [];
-    if (!acc[endId]) acc[endId] = [];
+  let distances = {};
+  let previousNodes = {};
+  let nodes = new Set();
 
-    acc[startId].push({ node: endId, weight });
-    acc[endId].push({ node: startId, weight });
+  for (let node in graph) {
+    distances[node] = Infinity;
+    previousNodes[node] = null;
+    nodes.add(node);
+  }
+  distances[startNode] = 0;
 
-    return acc;
-  }, {});
+  while (nodes.size) {
+    let smallest = Array.from(nodes).reduce((minNode, node) => {
+      if (distances[node] < distances[minNode]) minNode = node;
+      return minNode;
+    }, Array.from(nodes)[0]);
 
-  const { path, distance } = calculateShortestPath(graph, start_location_id, end_location_id);
+    if (distances[smallest] === Infinity) break;
+    nodes.delete(smallest);
 
-  const speed = 40; // km/h
-  const estimatedTime = distance / speed * 60; // in minutes
+    graph[smallest].forEach(neighbor => {
+      let alt = distances[smallest] + neighbor.weight;
+      if (alt < distances[neighbor.node]) {
+        distances[neighbor.node] = alt;
+        previousNodes[neighbor.node] = smallest;
+      }
+    });
+  }
 
-  return { path, total_distance: distance, estimated_time: estimatedTime };
+  const path = [];
+  let u = endNode;
+  while (previousNodes[u]) {
+    path.unshift(u);
+    u = previousNodes[u];
+  }
+  if (distances[endNode] !== Infinity) path.unshift(startNode);
+
+  return {
+    path,
+    totalDistance: distances[endNode],
+    estimatedTime: distances[endNode] / 60 // Example conversion
+  };
 };
+
+module.exports = { dijkstra };
